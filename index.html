@@ -1,0 +1,777 @@
+
+<!--DOCTYPE html-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markaz Affiliate Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .row {
+            width: 100%;
+            padding: 15px;
+            background: white;
+            margin-bottom: 10px;
+        }
+        
+        /* Header Row */
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #2c3e50;
+            color: white;
+        }
+        
+        .search-box {
+            position: relative;
+            width: 60%;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px 10px 35px;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+        }
+        
+        /* Categories Row */
+        .categories-row {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 15px;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .category {
+            display: inline-block;
+            width: 80px;
+            margin-right: 15px;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .category.active {
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .category-img {
+            width: 60px;
+            height: 60px;
+            background: #eee;
+            border-radius: 10px;
+            margin: 0 auto 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #3498db;
+        }
+        
+        .category-name {
+            font-size: 12px;
+            white-space: normal;
+        }
+        
+        /* Slider Row */
+        .slider-row {
+            padding: 0;
+            height: 180px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slider {
+            display: flex;
+            height: 100%;
+            transition: transform 0.5s ease;
+        }
+        
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        /* Offers Row */
+        .offers-row {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        /* Sub Categories Row */
+        .subcategories-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 15px;
+        }
+        
+        .subcategory {
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .subcategory.active {
+            border-bottom: 2px solid #e74c3c;
+        }
+        
+        .subcategory.empty {
+            display: none;
+        }
+        
+        .subcategory-img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: #eee;
+            border-radius: 10px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #e74c3c;
+        }
+        
+        .subcategory-name {
+            font-size: 12px;
+        }
+        
+        /* Products Row */
+        .products-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 15px;
+        }
+        
+        .product {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .product-img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: #f9f9f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .product:hover .product-img img {
+            transform: scale(1.05);
+        }
+        
+        .product-info {
+            padding: 8px;
+        }
+        
+        .product-title {
+            font-size: 12px;
+            margin-bottom: 5px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 30px;
+        }
+        
+        .product-price {
+            font-weight: bold;
+            color: #e74c3c;
+            font-size: 14px;
+        }
+        
+        .product-link {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .product-link:hover {
+            color: #3498db;
+        }
+        
+        /* Footer Row */
+        .footer-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 20px 15px;
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+        }
+        
+        .social-icon {
+            font-size: 24px;
+            color: white;
+        }
+        
+        /* Hide scrollbar but keep functionality */
+        .categories-row::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+            color: #777;
+        }
+        
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            grid-column: 1 / -1;
+            color: #777;
+        }
+        
+        /* Active Filter Indicator */
+        .active-filter {
+            background: #e8f4fc;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .clear-filter {
+            color: #3498db;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- 1st Row: Header with Title and Search -->
+    <div class="row header-row">
+        <h1>Markaz</h1>
+        <form id="searchForm" class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="searchInput" placeholder="Search..." autocomplete="off">
+        </form>
+    </div>
+    
+    <!-- Active Filter Indicator -->
+    <div id="activeFilter" class="active-filter" style="display: none;">
+        <span id="filterText"></span>
+        <span class="clear-filter" onclick="clearFilters()">Clear</span>
+    </div>
+    
+    <!-- 2nd Row: Categories -->
+    <div class="row categories-row" id="categoriesRow">
+        <div class="loading">Loading categories...</div>
+    </div>
+    
+    <!-- 3rd Row: Image Slider -->
+    <div class="row slider-row">
+        <div class="slider" id="mainSlider">
+            <div class="slide" style="background-color: #3498db; display: flex; align-items: center; justify-content: center; color: white;">
+                <h2>Summer Sale</h2>
+            </div>
+            <div class="slide" style="background-color: #e74c3c; display: flex; align-items: center; justify-content: center; color: white;">
+                <h2>New Arrivals</h2>
+            </div>
+            <div class="slide" style="background-color: #2ecc71; display: flex; align-items: center; justify-content: center; color: white;">
+                <h2>Special Offers</h2>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 4th Row: Sticky Offers -->
+    <div class="row offers-row">
+        <div class="offer-slider">
+            <p>2 exclusive offers available! <i class="fas fa-tag"></i> Shop now!</p>
+        </div>
+    </div>
+    
+    <!-- 5th Row: Sub Categories -->
+    <div class="row subcategories-row" id="subcategoriesRow">
+        <div class="loading">Loading subcategories...</div>
+    </div>
+    
+    <!-- 6th Row: Products -->
+    <div class="row">
+        <div class="products-container" id="productsContainer">
+            <div class="loading">Loading products...</div>
+        </div>
+    </div>
+    
+    <!-- 7th Row: Footer -->
+    <div class="row footer-row">
+        <div>
+            <i class="fab fa-facebook social-icon"></i>
+            <p>Facebook</p>
+        </div>
+        <div>
+            <i class="fab fa-instagram social-icon"></i>
+            <p>Instagram</p>
+        </div>
+        <div>
+            <i class="fab fa-whatsapp social-icon"></i>
+            <p>WhatsApp</p>
+        </div>
+    </div>
+
+    <script>
+        // Google Sheets URL
+        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTPtt5U3y0VP-Fxg6yIw5MfBkEocQcZd-SWRq-s3x2mvtrlqHNwDkjpE9KWJq9hXjBCRIW5wdMUsh3g/pub?gid=0&single=true&output=tsv';
+        
+        // Global variables
+        let allProducts = [];
+        let categories = [];
+        let subcategories = new Map();
+        let currentCategory = null;
+        let currentSubcategory = null;
+        let currentSearch = null;
+        
+        // DOM elements
+        const categoriesRow = document.getElementById('categoriesRow');
+        const subcategoriesRow = document.getElementById('subcategoriesRow');
+        const productsContainer = document.getElementById('productsContainer');
+        const searchForm = document.getElementById('searchForm');
+        const searchInput = document.getElementById('searchInput');
+        const activeFilter = document.getElementById('activeFilter');
+        const filterText = document.getElementById('filterText');
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            currentCategory = urlParams.get('cat');
+            currentSearch = urlParams.get('search');
+            
+            // Load data from Google Sheet
+            loadData();
+            
+            // Setup search form
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const searchTerm = searchInput.value.trim();
+                if (searchTerm) {
+                    window.location.href = `index.html?search=${encodeURIComponent(searchTerm)}`;
+                } else {
+                    window.location.href = 'index.html';
+                }
+            });
+            
+            // Initialize slider
+            initSlider();
+        });
+        
+        // Load data from Google Sheet
+        async function loadData() {
+            try {
+                const response = await fetch(SHEET_URL);
+                const tsvData = await response.text();
+                parseData(tsvData);
+                
+                // Update UI based on URL parameters
+                if (currentCategory) {
+                    filterByCategory(currentCategory);
+                    updateActiveFilter(`Category: ${currentCategory}`);
+                } else if (currentSearch) {
+                    searchInput.value = currentSearch;
+                    filterBySearch(currentSearch);
+                    updateActiveFilter(`Search: "${currentSearch}"`);
+                } else {
+                    displayProducts(allProducts);
+                }
+            } catch (error) {
+                console.error('Error loading data:', error);
+                productsContainer.innerHTML = '<div class="no-results">Error loading products. Please try again later.</div>';
+            }
+        }
+        
+      
+    // Parse TSV data
+function parseData(tsvData) {
+    const rows = tsvData.split('\n').slice(1); // Skip header row
+    allProducts = [];
+    categories = new Set();
+    subcategories = new Map();
+
+    rows.forEach(row => {
+        if (!row.trim()) return;
+
+        const columns = row.split('\t');
+        if (columns.length >= 9) {
+            const product = {
+                name: columns[0],
+                price: columns[1],
+                detail: columns[2],
+                url: columns[3],
+                images: columns[4].split(',').map(img => img.trim()),
+                id: columns[5],
+                subCategory: columns[6],
+                mainCategory: columns[7],
+                rank: columns[8].trim().toLowerCase() === 'true'
+            };
+            allProducts.push(product);
+            categories.add(product.mainCategory);
+            subcategories.set(product.subCategory, product.rank);
+        }
+    });
+
+    // Render categories
+    renderCategories();
+
+    // Render subcategories
+    renderSubcategories();
+}
+        // Render categories
+        function renderCategories() {
+            categoriesRow.innerHTML = '';
+            Array.from(categories).forEach(category => {
+                const isActive = currentCategory === category;
+                const categoryElement = document.createElement('div');
+                categoryElement.className = `category ${isActive ? 'active' : ''}`;
+                categoryElement.innerHTML = `
+                    <div class="category-img">
+                        <i class="fas fa-${getCategoryIcon(category)}"></i>
+                    </div>
+                    <div class="category-name">${category}</div>
+                `;
+                categoryElement.addEventListener('click', () => {
+                    window.location.href = `index.html?cat=${encodeURIComponent(category)}`;
+                });
+                categoriesRow.appendChild(categoryElement);
+            });
+        }
+        
+        // Render subcategories
+        function renderSubcategories() {
+            subcategoriesRow.innerHTML = '';
+            
+            // Get all unique subcategories that have products in current view and rank is true
+            const activeSubcategories = new Set();
+            const filteredProducts = getFilteredProducts();
+            
+            filteredProducts.forEach(product => {
+                if (subcategories.get(product.subCategory)) {
+                    activeSubcategories.add(product.subCategory);
+                }
+            });
+            
+            // Convert the Set to an array and sort it
+            const sortedSubcategories = Array.from(activeSubcategories).sort();
+            
+            if (sortedSubcategories.length === 0) {
+                subcategoriesRow.innerHTML = '<div class="no-results">No subcategories available</div>';
+                return;
+            }
+            
+            sortedSubcategories.forEach(subcategory => {
+                const isActive = currentSubcategory === subcategory;
+                const subcategoryElement = document.createElement('div');
+                subcategoryElement.className = `subcategory ${isActive ? 'active' : ''}`;
+                subcategoryElement.innerHTML = `
+                    <div class="subcategory-img">
+                        <i class="fas fa-${getSubcategoryIcon(subcategory)}"></i>
+                    </div>
+                    <div class="subcategory-name">${subcategory}</div>
+                `;
+                subcategoryElement.addEventListener('click', () => {
+                    filterBySubcategory(subcategory);
+                    updateActiveFilter(`Subcategory: ${subcategory}`);
+                });
+                subcategoriesRow.appendChild(subcategoryElement);
+            });
+        }
+        
+        // Get filtered products based on current filters
+        function getFilteredProducts() {
+            let filteredProducts = [...allProducts];
+            
+            if (currentCategory) {
+                filteredProducts = filteredProducts.filter(
+                    product => product.mainCategory === currentCategory
+                );
+            }
+            
+            if (currentSubcategory) {
+                filteredProducts = filteredProducts.filter(
+                    product => product.subCategory === currentSubcategory
+                );
+            }
+            
+            if (currentSearch) {
+                const searchTerm = currentSearch.toLowerCase();
+                filteredProducts = filteredProducts.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm) || 
+                    product.detail.toLowerCase().includes(searchTerm) ||
+                    product.subCategory.toLowerCase().includes(searchTerm) ||
+                    product.mainCategory.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            return filteredProducts;
+        }
+        
+        // Filter by category
+        function filterByCategory(category) {
+            currentCategory = category;
+            currentSubcategory = null;
+            currentSearch = null;
+            
+            const filteredProducts = getFilteredProducts();
+            displayProducts(filteredProducts);
+            renderSubcategories();
+        }
+        
+        // Filter by subcategory
+        function filterBySubcategory(subcategory) {
+            currentSubcategory = subcategory;
+            const filteredProducts = getFilteredProducts();
+            displayProducts(filteredProducts);
+        }
+        
+        // Filter by search
+        function filterBySearch(searchTerm) {
+            currentSearch = searchTerm.toLowerCase();
+            currentCategory = null;
+            currentSubcategory = null;
+            
+            const filteredProducts = getFilteredProducts();
+            displayProducts(filteredProducts);
+            renderCategories();
+            renderSubcategories();
+        }
+        
+        // Display products
+        function displayProducts(products) {
+            productsContainer.innerHTML = '';
+            
+            if (products.length === 0) {
+                productsContainer.innerHTML = '<div class="no-results">No products found matching your criteria.</div>';
+                return;
+            }
+
+            // Reverse the products array
+    products.reverse();
+            
+            products.forEach(product => {
+                const productElement = document.createElement('div');
+                productElement.className = 'product';
+                productElement.innerHTML = `
+                    <a href="${product.url}" target="_blank" class="product-link">
+                        <div class="product-img">
+                            ${product.images.length > 0 ? 
+                                `<img src="${product.images[0]}" alt="${product.name}" loading="lazy">` : 
+                                `<i class="fas fa-box-open"></i>`
+                            }
+                        </div>
+                        <div class="product-info">
+                            <div class="product-title">${product.name}</div>
+                            <div class="product-price">Rs: ${product.price}</div>
+                        </div>
+                    </a>
+                `;
+                
+                // Add image slider if multiple images
+              
+
+
+
+if (product.images.length > 1) {
+    initProductImageSlider(productElement, product.images);
+}
+
+productsContainer.appendChild(productElement);
+});
+}
+
+// Initialize product image slider
+function initProductImageSlider(productElement, images) {
+const imgContainer = productElement.querySelector('.product-img');
+imgContainer.innerHTML = '';
+
+const slider = document.createElement('div');
+slider.style.display = 'flex';
+slider.style.width = `${100 * images.length}%`;
+slider.style.height = '100%';
+slider.style.transition = 'transform 0.5s ease';
+
+images.forEach(img => {
+    const imgDiv = document.createElement('div');
+    imgDiv.style.minWidth = '100%';
+    imgDiv.style.height = '100%';
+    imgDiv.innerHTML = `<img src="${img}" alt="" style="width:100%;height:100%;object-fit:cover;">`;
+    slider.appendChild(imgDiv);
+});
+
+imgContainer.appendChild(slider);
+
+// Auto-slide images every 5 seconds
+let currentIndex = 0;
+setInterval(() => {
+    currentIndex = (currentIndex + 1) % images.length;
+    slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+}, 5000);
+}
+
+// Update active filter display
+function updateActiveFilter(text) {
+filterText.textContent = text;
+activeFilter.style.display = 'flex';
+}
+
+// Clear all filters
+function clearFilters() {
+window.location.href = 'index.html';
+}
+
+// Initialize main slider
+function initSlider() {
+const slider = document.getElementById('mainSlider');
+let slideIndex = 0;
+
+function slide() {
+    slideIndex = (slideIndex + 1) % 3; // 3 slides
+    slider.style.transform = `translateX(-${slideIndex * 100}%)`;
+}
+
+setInterval(slide, 5000); // Change slide every 5 seconds
+}
+
+// Get category icon
+// Get category icon
+function getCategoryIcon(category) {
+    const icons = {
+        'beauty & care': 'spa',
+        'home & living': 'home',
+        'tech & tools': 'mobile-alt',
+        'women corner': 'female',
+        'men\'s fashion': 'male',
+        'kids & mother': 'child',
+        'brands': 'tag'
+    };
+    return icons[category.toLowerCase()] || 'shopping-bag';
+}
+
+// Get subcategory icon
+function getSubcategoryIcon(subcategory) {
+    const icons = {
+        // Beauty & Care
+        'skin care': 'spa',
+        'hair care': 'cut',
+        'curlers & straighter': 'minus',
+        'rings': 'circle-dot',
+        'bundles': 'box',
+        'shavers & trimmers': 'scissors',
+        'personal care': 'toilet',
+        'necklace': 'gem',
+
+        // Home & Living
+        'home accessories': 'home',
+        'kitchen accessories': 'utensils',
+        'decor light': 'lightbulb',
+        'utensils': 'utensils',
+        'double bedsheet': 'bed',
+        'wall decor': 'image',
+        'wall clock': 'clock',
+        'books': 'book',
+
+        // Tech & Tools
+        'bike accessories': 'bicycle',
+        'headphone & handsfree': 'headphones',
+        'light & lamp': 'lightbulb',
+        'camera': 'camera',
+        'car accessories': 'car',
+        'smart watches': 'watch',
+        'mobile accessories': 'mobile-alt',
+        'computer accessories': 'desktop',
+
+        // Women Corner
+        'ready to wear': 'tshirt',
+        '3 piece': 'tshirt',
+        '2 piece': 'tshirt',
+        'festival cloths': 'gift',
+        'crossbody bags': 'bag-shopping',
+        'watches': 'watch',
+        'night suit': 'moon',
+        'flat': 'shoe-prints',
+
+        // Men's Fashion
+        'cotton unstiched': 'tshirt',
+        'tracksuit': 'running',
+        'wash n wear': 'tshirt',
+        'perfumes': 'spray-can',
+        'watches': 'watch',
+        'shalwar kameez': 'tshirt',
+        'track suit': 'running',
+        'wallets': 'wallet',
+
+        // Kids & Mother
+        'full dress': 'tshirt',
+        'track suit': 'running',
+        'brush': 'brush',
+        'kids sleep wear': 'bed',
+        'classic toys': 'gamepad',
+        'educational toys': 'book',
+        'feeder & pacific': 'baby-carriage',
+        'styling & access': 'scissors',
+
+        // Brands
+        '14th august': 'flag',
+        'shoes': 'shoe-prints',
+        'watches': 'watch',
+        'bag': 'bag-shopping',
+        'wallet': 'wallet',
+        'perfumes': 'spray-can',
+        'gifts': 'gift',
+        'tracksuits': 'running'
+    };
+    return icons[subcategory.toLowerCase().replace(' ', '-')] || 'tag';
+}
+
+</script>
+</body>
+</html>
